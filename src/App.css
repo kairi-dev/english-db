@@ -1,0 +1,296 @@
+/* Variables – light blue (水色) theme */
+:root {
+  --header-bg: #0288d1;
+  --header-fg: #fff;
+  --bg: #e3f2fd;
+  --card-bg: #fff;
+  --border: #b3e5fc;
+  --primary: #0288d1;
+  --primary-light: #4fc3f7;
+  --danger: #c62828;
+  --safe: #2e7d32;
+  --touch-min: 44px;
+  --header-h: 56px;
+  --fab-size: 56px;
+}
+
+.app {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  padding-bottom: calc(var(--fab-size) + 24px);
+}
+
+/* Header */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-h);
+  min-height: var(--touch-min);
+  padding: 0 8px 0 4px;
+  padding-left: max(8px, env(safe-area-inset-left));
+  padding-right: max(8px, env(safe-area-inset-right));
+  padding-top: max(0px, env(safe-area-inset-top));
+  background: var(--header-bg);
+  color: var(--header-fg);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.header-btn.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--touch-min);
+  height: var(--touch-min);
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.header-btn.icon:active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.header-title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  flex: 1;
+  text-align: center;
+}
+
+.header-spacer {
+  width: var(--touch-min);
+  height: var(--touch-min);
+}
+
+/* Search */
+.search-bar {
+  padding: 8px;
+  padding-left: max(8px, env(safe-area-inset-left));
+  padding-right: max(8px, env(safe-area-inset-right));
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.search-input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 0 12px;
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* List */
+.list-wrap {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+.list-item {
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.list-item-main {
+  padding: 14px 16px;
+}
+
+.list-item-row {
+  min-height: 24px;
+}
+
+.list-item-title {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.list-item-content-wrap {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.list-item-content {
+  font-size: 0.9375rem;
+  color: #555;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Inputs in list */
+.list-item-title-input,
+.list-item-content-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 0;
+  font-size: 1rem;
+  font-family: inherit;
+  border: none;
+  border-bottom: 1px solid var(--border);
+  background: transparent;
+  resize: vertical;
+}
+
+.list-item-title-input:focus,
+.list-item-content-input:focus {
+  outline: none;
+  border-bottom-color: var(--primary);
+}
+
+.list-item-content-input {
+  min-height: 60px;
+  border-bottom: none;
+}
+
+/* New draft & edit */
+.new-draft .list-item-main,
+.list-item.editing .list-item-main {
+  padding: 14px 16px;
+}
+
+.btn-done {
+  margin-top: 12px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #fff;
+  background: var(--primary);
+  border: none;
+  border-radius: 8px;
+  min-height: var(--touch-min);
+  cursor: pointer;
+}
+
+.btn-done:active {
+  opacity: 0.9;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.btn-cancel,
+.btn-save {
+  flex: 1;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 8px;
+  min-height: var(--touch-min);
+  cursor: pointer;
+}
+
+.btn-cancel {
+  background: #eee;
+  color: #333;
+  border: 1px solid var(--border);
+}
+
+.btn-save {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+}
+
+/* Swipe row */
+.swipe-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.swipe-actions {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 140px;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  z-index: 0;
+}
+
+.swipe-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.swipe-btn.edit {
+  background: var(--primary-light);
+  color: #fff;
+}
+
+.swipe-btn.top {
+  background: var(--safe);
+  color: #fff;
+}
+
+.swipe-btn.delete {
+  background: var(--danger);
+  color: #fff;
+}
+
+.swipe-content {
+  position: relative;
+  z-index: 1;
+  background: var(--card-bg);
+  transition: transform 0.1s ease-out;
+  cursor: pointer;
+  min-height: var(--touch-min);
+}
+
+.swipe-content:active {
+  background: #e3f2fd;
+}
+
+/* FAB */
+.fab {
+  position: fixed;
+  right: max(20px, env(safe-area-inset-right));
+  bottom: max(20px, env(safe-area-inset-bottom));
+  width: var(--fab-size);
+  height: var(--fab-size);
+  border-radius: 50%;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.fab:active {
+  transform: scale(0.96);
+}
