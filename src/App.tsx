@@ -5,6 +5,7 @@ import { createEmptyEntry } from './types/entry'
 import './App.css'
 
 const APP_TITLE = 'My English DB'
+const APP_VERSION = 'v-swipe-debug-1'
 const SWIPE_ACTION_WIDTH = 140
 
 function App() {
@@ -110,7 +111,7 @@ function App() {
 
   const handleSwipeEnd = useCallback(() => {
     setSwipeOffset((prev) => {
-      const threshold = SWIPE_ACTION_WIDTH / 2
+      const threshold = SWIPE_ACTION_WIDTH * 0.3
       if (prev >= threshold) {
         // 十分スワイプされたら完全に開いた状態にスナップ
         return SWIPE_ACTION_WIDTH
@@ -137,7 +138,9 @@ function App() {
         >
           <SearchIcon />
         </button>
-        <h1 className="header-title">{APP_TITLE}</h1>
+        <h1 className="header-title">
+          {APP_TITLE} <span className="header-version">{APP_VERSION}</span>
+        </h1>
         <div className="header-spacer" />
       </header>
 

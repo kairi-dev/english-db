@@ -67,6 +67,12 @@
   text-align: center;
 }
 
+.header-version {
+  font-size: 0.75rem;
+  margin-left: 4px;
+  opacity: 0.8;
+}
+
 .header-spacer {
   width: var(--touch-min);
   height: var(--touch-min);
