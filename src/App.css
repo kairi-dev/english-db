@@ -116,6 +116,12 @@
   min-height: 24px;
 }
 
+.list-item-row-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .list-item-title {
   font-size: 1rem;
   font-weight: 500;
@@ -268,6 +274,38 @@
 
 .swipe-content:active {
   background: #e3f2fd;
+}
+
+/* Hover actions for desktop */
+.list-item-actions-hover {
+  margin-left: auto;
+  display: none;
+  gap: 4px;
+}
+
+.list-item-action-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: none;
+  background: #e3f2fd;
+  color: #333;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.list-item-action-btn.danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .list-item-main:hover .list-item-actions-hover {
+    display: flex;
+  }
 }
 
 /* FAB */

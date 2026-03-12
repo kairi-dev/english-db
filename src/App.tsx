@@ -99,17 +99,31 @@ function App() {
   }, [])
 
   const handleSwipeMove = useCallback((deltaX: number) => {
-    setSwipeOffset((prev) => Math.max(0, Math.min(SWIPE_ACTION_WIDTH, prev + deltaX)))
+    setSwipeOffset((prev) => {
+      const next = prev + deltaX
+      // 0〜SWIPE_ACTION_WIDTH の範囲でクランプ
+      if (next < 0) return 0
+      if (next > SWIPE_ACTION_WIDTH) return SWIPE_ACTION_WIDTH
+      return next
+    })
   }, [])
 
   const handleSwipeEnd = useCallback(() => {
-    setSwipeOffset(0)
-    setSwipedId(null)
+    setSwipeOffset((prev) => {
+      const threshold = SWIPE_ACTION_WIDTH / 2
+      if (prev >= threshold) {
+        // 十分スワイプされたら完全に開いた状態にスナップ
+        return SWIPE_ACTION_WIDTH
+      }
+      // しきい値未満なら閉じる
+      setSwipedId(null)
+      return 0
+    })
   }, [])
 
-  const handleSwipeReveal = useCallback((id: Entry['id']) => {
-    setSwipedId(id)
-    setSwipeOffset(SWIPE_ACTION_WIDTH)
+  const handleSwipeClose = useCallback(() => {
+    setSwipeOffset(0)
+    setSwipedId(null)
   }, [])
 
   return (
@@ -181,7 +195,7 @@ function App() {
               onSwipeStart={(initial) => handleSwipeStart(entry.id, initial)}
               onSwipeMove={handleSwipeMove}
               onSwipeEnd={handleSwipeEnd}
-              onSwipeReveal={() => handleSwipeReveal(entry.id)}
+              onSwipeClose={handleSwipeClose}
             />
           ))}
       </main>
@@ -263,7 +277,7 @@ interface ListItemProps {
   onSwipeStart: (initialOffset: number) => void
   onSwipeMove: (deltaX: number) => void
   onSwipeEnd: () => void
-  onSwipeReveal: () => void
+  onSwipeClose: () => void
 }
 
 function ListItem({
@@ -280,7 +294,7 @@ function ListItem({
   onSwipeStart,
   onSwipeMove,
   onSwipeEnd,
-  onSwipeReveal,
+  onSwipeClose,
 }: ListItemProps) {
   const [editTitle, setEditTitle] = useState(entry.title)
   const [editContent, setEditContent] = useState(entry.content)
@@ -369,14 +383,49 @@ function ListItem({
         className="list-item-main swipe-content"
         style={{ transform: `translateX(${swipeReveal}px)` }}
         onClick={() => {
-          if (swipeReveal > 0) onSwipeReveal()
-          else onToggle()
+          if (swipeReveal > 0) {
+            onSwipeClose()
+          } else {
+            onToggle()
+          }
         }}
       >
-        <div className="list-item-row">
+        <div className="list-item-row list-item-row-main">
           <span className="list-item-title">
             {entry.title || '(No title)'}
           </span>
+          <div className="list-item-actions-hover">
+            <button
+              type="button"
+              className="list-item-action-btn"
+              onClick={(e) => {
+                e.stopPropagation()
+                onStartEdit()
+              }}
+            >
+              ✏️
+            </button>
+            <button
+              type="button"
+              className="list-item-action-btn"
+              onClick={(e) => {
+                e.stopPropagation()
+                onMoveToTop()
+              }}
+            >
+              ⇧
+            </button>
+            <button
+              type="button"
+              className="list-item-action-btn danger"
+              onClick={(e) => {
+                e.stopPropagation()
+                onDelete()
+              }}
+            >
+              🗑
+            </button>
+          </div>
         </div>
         {isExpanded && (
           <div className="list-item-content-wrap">
