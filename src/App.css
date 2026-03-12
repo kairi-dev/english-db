@@ -229,9 +229,9 @@
   overflow: hidden;
 }
 
-.swipe-actions {
+.swipe-actions-right {
   position: absolute;
-  left: 0;
+  right: 0;
   top: 0;
   bottom: 0;
   width: 140px;
@@ -282,36 +282,44 @@
   background: #e3f2fd;
 }
 
-/* Hover actions for desktop */
-.list-item-actions-hover {
+/* Inline actions next to title */
+.word-actions-inline {
   margin-left: auto;
-  display: none;
+  display: flex;
   gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease-out;
 }
 
-.list-item-action-btn {
-  width: 28px;
-  height: 28px;
+.word-actions-inline--visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.word-action-btn {
+  width: 32px;
+  height: 32px;
   border-radius: 999px;
   border: none;
-  background: #e3f2fd;
-  color: #333;
-  font-size: 0.75rem;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.list-item-action-btn.danger {
-  background: var(--danger);
+  font-size: 0.9rem;
+  cursor: pointer;
+  background: var(--primary);
   color: #fff;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  .list-item-main:hover .list-item-actions-hover {
-    display: flex;
-  }
+.word-action-btn.top {
+  background: var(--card-bg);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.word-action-btn.delete {
+  background: var(--primary);
+  color: #fff;
 }
 
 /* FAB */
