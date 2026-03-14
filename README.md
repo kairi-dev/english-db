@@ -1,48 +1,32 @@
 # My English DB
 
-（ここにアプリの一行説明を書く）
+It is a tool for me to learn English words or chunks in efficient way.
 
-## デモ
+![app-image](public/home-image.png)
 
-- デプロイURL: （Vercel などの URL）
-- スクショ: （任意）
+## function
 
-## 機能
+- list words and chunks ,in addition to your own languages something.
+- add context below in free ways.
+- slide list to sort,edit delete
 
-- （主な機能を箇条書き）
-- 
-- 
-
-## 技術スタック
+## stack
 
 - React 19 / TypeScript
 - Vite 7
 - PWA（vite-plugin-pwa）
-- （その他あれば）
 
-## 工夫した点
+##　the part that I thought into
 
-- （実装でこだわったところを 1〜3 個）
-- 
-- 
+- responsive
+- simple
+- native like
 
-## セットアップ
-
+## set up
 ```bash
 npm install
 npm run dev
 ```
 
-- ビルド: `npm run build`
-- プレビュー: `npm run preview`
-
-## ディレクトリ構成
-
-- `src/components/` — （説明）
-- `src/hooks/` — （説明）
-- `src/types/` — （説明）
-- （必要なら追記）
-
-## ライセンス
-
-（MIT / 個人利用 など）
+- build: `npm run build`
+- preview: `npm run preview`
