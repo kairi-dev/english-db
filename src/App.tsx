@@ -6,7 +6,7 @@ import { WordListItem } from './components/WordListItem.tsx'
 import './App.css'
 
 const APP_TITLE = 'My English DB'
-const SWIPE_ACTION_WIDTH = 140
+const SWIPE_ACTION_WIDTH = 104
 
 function App() {
   const { words, addWord, updateWord, deleteWord, moveWordToTop } = useWords()
@@ -158,6 +158,7 @@ function App() {
               isExpanded={expandedId === entry.id}
               isEditing={editingId === entry.id}
               swipeOffset={swipedId === entry.id ? swipeOffset : 0}
+              swipeActionWidth={SWIPE_ACTION_WIDTH}
               onToggle={() => handleToggleExpand(entry.id)}
               onDelete={() => handleDelete(entry.id)}
               onMoveToTop={() => handleMoveToTop(entry.id)}

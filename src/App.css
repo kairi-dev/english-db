@@ -227,6 +227,8 @@
 .swipe-wrap {
   position: relative;
   overflow: hidden;
+  /* 削除ボタンを画面右端に揃える: 幅をビューポート基準に */
+  width: calc(100vw - env(safe-area-inset-left, 0px));
 }
 
 .swipe-actions-right {
@@ -273,9 +275,14 @@
   position: relative;
   z-index: 1;
   background: var(--card-bg);
-  transition: transform 0.1s ease-out;
+  transition: transform 0.2s ease-out;
   cursor: pointer;
   min-height: var(--touch-min);
+  padding-right: 0;
+}
+
+.swipe-content--dragging {
+  transition: none;
 }
 
 .swipe-content:active {
@@ -287,13 +294,10 @@
   margin-left: auto;
   display: flex;
   gap: 4px;
-  opacity: 0;
   pointer-events: none;
-  transition: opacity 0.12s ease-out;
 }
 
 .word-actions-inline--visible {
-  opacity: 1;
   pointer-events: auto;
 }
 
@@ -309,6 +313,7 @@
   cursor: pointer;
   background: var(--primary);
   color: #fff;
+  transition: opacity 0.1s ease-out;
 }
 
 .word-action-btn.top {

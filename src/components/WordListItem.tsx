@@ -9,6 +9,7 @@ interface WordListItemProps {
   isExpanded: boolean
   isEditing: boolean
   swipeOffset: number
+  swipeActionWidth: number
   onToggle: () => void
   onDelete: () => void
   onMoveToTop: () => void
@@ -26,6 +27,7 @@ export function WordListItem({
   isExpanded,
   isEditing,
   swipeOffset,
+  swipeActionWidth,
   onToggle,
   onDelete,
   onMoveToTop,
@@ -39,9 +41,15 @@ export function WordListItem({
 }: WordListItemProps) {
   const [editTitle, setEditTitle] = useState(word.title)
   const [editContent, setEditContent] = useState(word.content)
+  const [isSwipeDragging, setIsSwipeDragging] = useState(false)
   const touchStartX = useRef(0)
   const lastX = useRef(0)
   const opened = swipeOffset < 0
+  const segment = swipeActionWidth / 3
+  const revealed = -swipeOffset
+  const opacityEdit = Math.min(1, Math.max(0, revealed / segment))
+  const opacityTop = Math.min(1, Math.max(0, (revealed - segment) / segment))
+  const opacityDelete = Math.min(1, Math.max(0, (revealed - 2 * segment) / segment))
 
   useEffect(() => {
     setEditTitle(word.title)
@@ -51,6 +59,7 @@ export function WordListItem({
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX
     lastX.current = e.touches[0].clientX
+    setIsSwipeDragging(true)
     onSwipeStart(swipeOffset)
   }
 
@@ -62,6 +71,7 @@ export function WordListItem({
   }
 
   const handleTouchEnd = () => {
+    setIsSwipeDragging(false)
     onSwipeEnd()
   }
 
@@ -111,7 +121,7 @@ export function WordListItem({
       onTouchCancel={handleTouchEnd}
     >
       <div
-        className={`list-item-main swipe-content${opened ? ' swipe-content--opened' : ''}`}
+        className={`list-item-main swipe-content${opened ? ' swipe-content--opened' : ''}${isSwipeDragging ? ' swipe-content--dragging' : ''}`}
         style={{ transform: `translateX(${swipeOffset}px)` }}
         onClick={() => {
           if (opened) {
@@ -125,10 +135,14 @@ export function WordListItem({
           <span className="list-item-title">
             {word.title || '(No title)'}
           </span>
-          <div className={`word-actions-inline${opened ? ' word-actions-inline--visible' : ''}`}>
+          <div
+            className={`word-actions-inline${opened ? ' word-actions-inline--visible' : ''}`}
+            style={{ pointerEvents: opened ? 'auto' : 'none' }}
+          >
             <button
               type="button"
               className="word-action-btn edit"
+              style={{ opacity: opacityEdit }}
               onClick={(e) => {
                 e.stopPropagation()
                 onStartEdit()
@@ -139,6 +153,7 @@ export function WordListItem({
             <button
               type="button"
               className="word-action-btn top"
+              style={{ opacity: opacityTop }}
               onClick={(e) => {
                 e.stopPropagation()
                 onMoveToTop()
@@ -149,6 +164,7 @@ export function WordListItem({
             <button
               type="button"
               className="word-action-btn delete"
+              style={{ opacity: opacityDelete }}
               onClick={(e) => {
                 e.stopPropagation()
                 onDelete()
