@@ -120,6 +120,46 @@ export function WordListItem({
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchEnd}
     >
+      {/* Notion式: 右端に固定のボタン帯。コンテンツが左スライドすると下から見える */}
+      <div
+        className={`swipe-actions-strip${opened ? ' swipe-actions-strip--visible' : ''}`}
+        style={{ width: swipeActionWidth }}
+        aria-hidden={!opened}
+      >
+        <button
+          type="button"
+          className="word-action-btn edit"
+          style={{ opacity: opacityEdit }}
+          onClick={(e) => {
+            e.stopPropagation()
+            onStartEdit()
+          }}
+        >
+          <EditIcon />
+        </button>
+        <button
+          type="button"
+          className="word-action-btn top"
+          style={{ opacity: opacityTop }}
+          onClick={(e) => {
+            e.stopPropagation()
+            onMoveToTop()
+          }}
+        >
+          <MoveTopIcon />
+        </button>
+        <button
+          type="button"
+          className="word-action-btn delete"
+          style={{ opacity: opacityDelete }}
+          onClick={(e) => {
+            e.stopPropagation()
+            onDelete()
+          }}
+        >
+          <DeleteIcon />
+        </button>
+      </div>
       <div
         className={`list-item-main swipe-content${opened ? ' swipe-content--opened' : ''}${isSwipeDragging ? ' swipe-content--dragging' : ''}`}
         style={{ transform: `translateX(${swipeOffset}px)` }}
@@ -135,44 +175,6 @@ export function WordListItem({
           <span className="list-item-title">
             {word.title || '(No title)'}
           </span>
-          <div
-            className={`word-actions-inline${opened ? ' word-actions-inline--visible' : ''}`}
-            style={{ pointerEvents: opened ? 'auto' : 'none' }}
-          >
-            <button
-              type="button"
-              className="word-action-btn edit"
-              style={{ opacity: opacityEdit }}
-              onClick={(e) => {
-                e.stopPropagation()
-                onStartEdit()
-              }}
-            >
-              <EditIcon />
-            </button>
-            <button
-              type="button"
-              className="word-action-btn top"
-              style={{ opacity: opacityTop }}
-              onClick={(e) => {
-                e.stopPropagation()
-                onMoveToTop()
-              }}
-            >
-              <MoveTopIcon />
-            </button>
-            <button
-              type="button"
-              className="word-action-btn delete"
-              style={{ opacity: opacityDelete }}
-              onClick={(e) => {
-                e.stopPropagation()
-                onDelete()
-              }}
-            >
-              <DeleteIcon />
-            </button>
-          </div>
         </div>
         {isExpanded && (
           <div className="list-item-content-wrap">

@@ -231,6 +231,26 @@
   width: calc(100vw - env(safe-area-inset-left, 0px));
 }
 
+/* Notion式: 右端に固定のボタン帯。コンテンツがスライドすると下から見える */
+.swipe-actions-strip {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  padding-right: 0;
+  background: var(--card-bg);
+  pointer-events: none;
+}
+
+.swipe-actions-strip--visible {
+  pointer-events: auto;
+}
+
 .swipe-actions-right {
   position: absolute;
   right: 0;
@@ -278,7 +298,6 @@
   transition: transform 0.2s ease-out;
   cursor: pointer;
   min-height: var(--touch-min);
-  padding-right: 0;
 }
 
 .swipe-content--dragging {
