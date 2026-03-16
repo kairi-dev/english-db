@@ -5,6 +5,7 @@ interface NewWordRowProps {
   onTitleChange: (title: string) => void
   onContentChange: (content: string) => void
   onComplete: () => void
+  onCancel: () => void
 }
 
 export function NewWordRow({
@@ -12,6 +13,7 @@ export function NewWordRow({
   onTitleChange,
   onContentChange,
   onComplete,
+  onCancel,
 }: NewWordRowProps) {
   return (
     <div className="list-item new-draft">
@@ -33,9 +35,14 @@ export function NewWordRow({
             placeholder="Description"
             rows={3}
           />
-          <button type="button" className="btn-done" onClick={onComplete}>
-            Done
-          </button>
+          <div className="edit-actions">
+            <button type="button" className="btn-cancel" onClick={onCancel}>
+              Cancel
+            </button>
+            <button type="button" className="btn-save" onClick={onComplete}>
+              Done
+            </button>
+          </div>
         </div>
       </div>
     </div>

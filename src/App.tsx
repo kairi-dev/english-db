@@ -6,7 +6,7 @@ import { WordListItem } from './components/WordListItem.tsx'
 import './App.css'
 
 const APP_TITLE = 'My English DB'
-const SWIPE_ACTION_WIDTH = 104
+const SWIPE_ACTION_WIDTH = 176
 
 function App() {
   const { words, addWord, updateWord, deleteWord, moveWordToTop } = useWords()
@@ -69,6 +69,31 @@ function App() {
     setExpandedId(newWord.id)
     setSearchOpen(false)
   }, [addWord])
+
+  const handleCancelNew = useCallback(() => {
+    if (!draftNew) return
+    deleteWord(draftNew.id)
+    setDraftNew(null)
+    setExpandedId(null)
+  }, [deleteWord, draftNew])
+
+  const handleNewTitleChange = useCallback(
+    (title: string) => {
+      if (!draftNew) return
+      updateWord(draftNew.id, title, draftNew.content)
+      setDraftNew({ ...draftNew, title })
+    },
+    [draftNew, updateWord]
+  )
+
+  const handleNewContentChange = useCallback(
+    (content: string) => {
+      if (!draftNew) return
+      updateWord(draftNew.id, draftNew.title, content)
+      setDraftNew({ ...draftNew, content })
+    },
+    [draftNew, updateWord]
+  )
 
   const handleCompleteNew = useCallback(() => {
     if (!draftNew) return
@@ -140,13 +165,10 @@ function App() {
         {draftNew && (
           <NewWordRow
             word={draftNew}
-            onTitleChange={(title) =>
-              updateWord(draftNew.id, title, draftNew.content)
-            }
-            onContentChange={(content) =>
-              updateWord(draftNew.id, draftNew.title, content)
-            }
+            onTitleChange={handleNewTitleChange}
+            onContentChange={handleNewContentChange}
             onComplete={handleCompleteNew}
+            onCancel={handleCancelNew}
           />
         )}
         {filteredEntries
