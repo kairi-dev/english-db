@@ -131,27 +131,6 @@
   gap: 8px;
 }
 
-.select-checkbox {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 4px;
-  background: #fff;
-  color: var(--primary);
-  font-size: 0.9rem;
-  cursor: pointer;
-}
-
-.select-checkbox--checked {
-  background: var(--primary);
-  color: #fff;
-  border-color: var(--primary);
-}
-
 .list-item-title {
   font-size: 1rem;
   font-weight: 500;

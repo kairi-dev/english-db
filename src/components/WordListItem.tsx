@@ -10,8 +10,6 @@ interface WordListItemProps {
   isEditing: boolean
   swipeOffset: number
   swipeActionWidth: number
-  isSelectionMode: boolean
-  isSelected: boolean
   onToggle: () => void
   onDelete: () => void
   onMoveToTop: () => void
@@ -22,8 +20,6 @@ interface WordListItemProps {
   onSwipeMove: (deltaX: number) => void
   onSwipeEnd: () => void
   onSwipeClose: () => void
-  onToggleSelect: () => void
-  onRequestSelectionMode: () => void
 }
 
 export function WordListItem({
@@ -32,8 +28,6 @@ export function WordListItem({
   isEditing,
   swipeOffset,
   swipeActionWidth,
-  isSelectionMode,
-  isSelected,
   onToggle,
   onDelete,
   onMoveToTop,
@@ -44,8 +38,6 @@ export function WordListItem({
   onSwipeMove,
   onSwipeEnd,
   onSwipeClose,
-  onToggleSelect,
-  onRequestSelectionMode,
 }: WordListItemProps) {
   const [editTitle, setEditTitle] = useState(word.title)
   const [editContent, setEditContent] = useState(word.content)
@@ -65,7 +57,6 @@ export function WordListItem({
   }, [word.title, word.content, isEditing])
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (isSelectionMode) return
     touchStartX.current = e.touches[0].clientX
     lastX.current = e.touches[0].clientX
     setIsSwipeDragging(true)
@@ -73,20 +64,13 @@ export function WordListItem({
   }
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (isSelectionMode) return
     const x = e.touches[0].clientX
     const delta = x - lastX.current
-    // 右スワイプで全体の選択モードを開始
-    if (delta > 8 && !isSelectionMode) {
-      onRequestSelectionMode()
-      return
-    }
     lastX.current = x
     onSwipeMove(delta)
   }
 
   const handleTouchEnd = () => {
-    if (isSelectionMode) return
     setIsSwipeDragging(false)
     onSwipeEnd()
   }
@@ -180,10 +164,6 @@ export function WordListItem({
         className={`list-item-main swipe-content${opened ? ' swipe-content--opened' : ''}${isSwipeDragging ? ' swipe-content--dragging' : ''}`}
         style={{ transform: `translateX(${swipeOffset}px)` }}
         onClick={() => {
-          if (isSelectionMode) {
-            onToggleSelect()
-            return
-          }
           if (opened) {
             onSwipeClose()
           } else {
@@ -192,19 +172,6 @@ export function WordListItem({
         }}
       >
         <div className="list-item-row list-item-row-main">
-          {isSelectionMode && (
-            <button
-              type="button"
-              className={`select-checkbox${isSelected ? ' select-checkbox--checked' : ''}`}
-              onClick={(e) => {
-                e.stopPropagation()
-                onToggleSelect()
-              }}
-              aria-pressed={isSelected}
-            >
-              {isSelected ? '✓' : ''}
-            </button>
-          )}
           <span className="list-item-title">
             {word.title || '(No title)'}
           </span>

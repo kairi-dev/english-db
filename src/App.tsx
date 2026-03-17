@@ -3,8 +3,6 @@ import type { Word } from './types/word'
 import { useWords } from './hooks/useWords'
 import { NewWordRow } from './components/NewWordRow'
 import { WordListItem } from './components/WordListItem.tsx'
-import { DeleteIcon } from './components/icons/DeleteIcon'
-import { CloseIcon } from './components/icons/CloseIcon'
 import './App.css'
 
 const APP_TITLE = 'My English DB'
@@ -20,8 +18,6 @@ function App() {
   const [draftNew, setDraftNew] = useState<Word | null>(null)
   const [swipedId, setSwipedId] = useState<Word['id'] | null>(null)
   const [swipeOffset, setSwipeOffset] = useState(0)
-  const [isSelectionMode, setIsSelectionMode] = useState(false)
-  const [selectedIds, setSelectedIds] = useState<Word['id'][]>([])
 
   const filteredEntries = searchQuery.trim()
     ? words.filter(
@@ -123,52 +119,27 @@ function App() {
   const handleSwipeEnd = useCallback(() => {
     setSwipeOffset((prev) => {
       const opened = Math.abs(prev)
-      const threshold = SWIPE_ACTION_WIDTH * 0.3
-      if (opened >= threshold) {
+      const openThreshold = SWIPE_ACTION_WIDTH * 0.3
+      const deleteThreshold = SWIPE_ACTION_WIDTH * 0.9
+
+      if (opened >= deleteThreshold && swipedId) {
+        handleDelete(swipedId)
+        return 0
+      }
+
+      if (opened >= openThreshold) {
         return -SWIPE_ACTION_WIDTH
       }
+
       setSwipedId(null)
       return 0
     })
-  }, [])
+  }, [handleDelete, swipedId])
 
   const handleSwipeClose = useCallback(() => {
     setSwipeOffset(0)
     setSwipedId(null)
   }, [])
-
-  const handleToggleSelect = useCallback((id: Word['id']) => {
-    setSelectedIds((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
-    )
-  }, [])
-
-  const handleEnterSelectionMode = useCallback(() => {
-    setIsSelectionMode(true)
-    setSelectedIds([])
-    setSwipedId(null)
-    setExpandedId(null)
-  }, [])
-
-  const handleExitSelectionMode = useCallback(() => {
-    setIsSelectionMode(false)
-    setSelectedIds([])
-    setSwipedId(null)
-  }, [])
-
-  const handleBulkDelete = useCallback(() => {
-    if (selectedIds.length === 0) return
-    const ok = window.confirm(`選択した${selectedIds.length}件を削除しますか？`)
-    if (!ok) return
-    selectedIds.forEach((id) => {
-      deleteWord(id)
-    })
-    setSelectedIds([])
-    setIsSelectionMode(false)
-    setSwipedId(null)
-    setExpandedId((prev) => (prev && selectedIds.includes(prev) ? null : prev))
-    setEditingId((prev) => (prev && selectedIds.includes(prev) ? null : prev))
-  }, [deleteWord, selectedIds])
 
   return (
     <div className="app">
@@ -182,27 +153,6 @@ function App() {
           <SearchIcon />
         </button>
         <h1 className="header-title">{APP_TITLE}</h1>
-        {isSelectionMode && (
-          <div style={{ display: 'flex', gap: 4 }}>
-            <button
-              type="button"
-              className="header-btn icon"
-              onClick={handleBulkDelete}
-              disabled={selectedIds.length === 0}
-              aria-label="Delete selected"
-            >
-              <DeleteIcon />
-            </button>
-            <button
-              type="button"
-              className="header-btn icon"
-              onClick={handleExitSelectionMode}
-              aria-label="Exit selection mode"
-            >
-              <CloseIcon />
-            </button>
-          </div>
-        )}
       </header>
 
       {searchOpen && (
@@ -238,8 +188,6 @@ function App() {
               isEditing={editingId === entry.id}
               swipeOffset={swipedId === entry.id ? swipeOffset : 0}
               swipeActionWidth={SWIPE_ACTION_WIDTH}
-              isSelectionMode={isSelectionMode}
-              isSelected={selectedIds.includes(entry.id)}
               onToggle={() => handleToggleExpand(entry.id)}
               onDelete={() => handleDelete(entry.id)}
               onMoveToTop={() => handleMoveToTop(entry.id)}
@@ -252,8 +200,6 @@ function App() {
               onSwipeMove={handleSwipeMove}
               onSwipeEnd={handleSwipeEnd}
               onSwipeClose={handleSwipeClose}
-              onToggleSelect={() => handleToggleSelect(entry.id)}
-              onRequestSelectionMode={handleEnterSelectionMode}
             />
           ))}
       </main>
@@ -261,8 +207,7 @@ function App() {
       <button
         type="button"
         className="fab"
-        onClick={isSelectionMode ? undefined : handleAddNew}
-        disabled={isSelectionMode}
+        onClick={handleAddNew}
         aria-label="Add"
       >
         +
