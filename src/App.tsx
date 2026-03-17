@@ -18,6 +18,8 @@ function App() {
   const [draftNew, setDraftNew] = useState<Word | null>(null)
   const [swipedId, setSwipedId] = useState<Word['id'] | null>(null)
   const [swipeOffset, setSwipeOffset] = useState(0)
+  const [isSelectionMode, setIsSelectionMode] = useState(false)
+  const [selectedIds, setSelectedIds] = useState<Word['id'][]>([])
 
   const filteredEntries = searchQuery.trim()
     ? words.filter(
@@ -133,6 +135,39 @@ function App() {
     setSwipedId(null)
   }, [])
 
+  const handleToggleSelect = useCallback((id: Word['id']) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id],
+    )
+  }, [])
+
+  const handleEnterSelectionMode = useCallback(() => {
+    setIsSelectionMode(true)
+    setSelectedIds([])
+    setSwipedId(null)
+    setExpandedId(null)
+  }, [])
+
+  const handleExitSelectionMode = useCallback(() => {
+    setIsSelectionMode(false)
+    setSelectedIds([])
+    setSwipedId(null)
+  }, [])
+
+  const handleBulkDelete = useCallback(() => {
+    if (selectedIds.length === 0) return
+    const ok = window.confirm(`選択した${selectedIds.length}件を削除しますか？`)
+    if (!ok) return
+    selectedIds.forEach((id) => {
+      deleteWord(id)
+    })
+    setSelectedIds([])
+    setIsSelectionMode(false)
+    setSwipedId(null)
+    setExpandedId((prev) => (prev && selectedIds.includes(prev) ? null : prev))
+    setEditingId((prev) => (prev && selectedIds.includes(prev) ? null : prev))
+  }, [deleteWord, selectedIds])
+
   return (
     <div className="app">
       <header className="header">
@@ -145,7 +180,33 @@ function App() {
           <SearchIcon />
         </button>
         <h1 className="header-title">{APP_TITLE}</h1>
-        <div className="header-spacer" />
+        {isSelectionMode ? (
+          <>
+            <button
+              type="button"
+              className="header-btn text"
+              onClick={handleBulkDelete}
+              disabled={selectedIds.length === 0}
+            >
+              削除
+            </button>
+            <button
+              type="button"
+              className="header-btn text"
+              onClick={handleExitSelectionMode}
+            >
+              キャンセル
+            </button>
+          </>
+        ) : (
+          <button
+            type="button"
+            className="header-btn text"
+            onClick={handleEnterSelectionMode}
+          >
+            選択
+          </button>
+        )}
       </header>
 
       {searchOpen && (
@@ -181,6 +242,8 @@ function App() {
               isEditing={editingId === entry.id}
               swipeOffset={swipedId === entry.id ? swipeOffset : 0}
               swipeActionWidth={SWIPE_ACTION_WIDTH}
+              isSelectionMode={isSelectionMode}
+              isSelected={selectedIds.includes(entry.id)}
               onToggle={() => handleToggleExpand(entry.id)}
               onDelete={() => handleDelete(entry.id)}
               onMoveToTop={() => handleMoveToTop(entry.id)}
@@ -193,6 +256,7 @@ function App() {
               onSwipeMove={handleSwipeMove}
               onSwipeEnd={handleSwipeEnd}
               onSwipeClose={handleSwipeClose}
+              onToggleSelect={() => handleToggleSelect(entry.id)}
             />
           ))}
       </main>
@@ -200,7 +264,8 @@ function App() {
       <button
         type="button"
         className="fab"
-        onClick={handleAddNew}
+        onClick={isSelectionMode ? undefined : handleAddNew}
+        disabled={isSelectionMode}
         aria-label="Add"
       >
         +

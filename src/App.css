@@ -79,6 +79,23 @@
   height: var(--touch-min);
 }
 
+.header-btn.text {
+  min-width: 56px;
+  height: var(--touch-min);
+  margin: 0 4px;
+  padding: 0 8px;
+  border: none;
+  background: transparent;
+  color: var(--header-fg);
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.header-btn.text:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
 /* Search */
 .search-bar {
   padding: 8px;
@@ -127,6 +144,27 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.select-checkbox {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 4px;
+  background: #fff;
+  color: var(--primary);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.select-checkbox--checked {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
 }
 
 .list-item-title {
