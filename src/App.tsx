@@ -158,6 +158,7 @@ function App() {
           <SearchIcon />
         </button>
         <h1 className="header-title">{APP_TITLE}</h1>
+        <div className="header-spacer" />
       </header>
 
       {searchOpen && (
