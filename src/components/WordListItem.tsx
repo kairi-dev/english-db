@@ -47,9 +47,15 @@ export function WordListItem({
   const opened = swipeOffset < 0
   const segment = swipeActionWidth / 3
   const revealed = -swipeOffset
+  const maxReveal = swipeActionWidth
   const opacityEdit = Math.min(1, Math.max(0, revealed / segment))
   const opacityTop = Math.min(1, Math.max(0, (revealed - segment) / segment))
   const opacityDelete = Math.min(1, Math.max(0, (revealed - 2 * segment) / segment))
+
+  const baseDeleteWidth = swipeActionWidth / 3
+  const maxDeleteWidth = swipeActionWidth
+  const revealRatio = Math.min(1, Math.max(0, revealed / maxReveal))
+  const deleteWidth = baseDeleteWidth + (maxDeleteWidth - baseDeleteWidth) * revealRatio
 
   useEffect(() => {
     setEditTitle(word.title)
@@ -151,7 +157,7 @@ export function WordListItem({
         <button
           type="button"
           className="word-action-btn delete"
-          style={{ opacity: opacityDelete }}
+          style={{ opacity: opacityDelete, width: deleteWidth }}
           onClick={(e) => {
             e.stopPropagation()
             onDelete()

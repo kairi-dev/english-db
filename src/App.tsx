@@ -120,7 +120,7 @@ function App() {
     setSwipeOffset((prev) => {
       const opened = Math.abs(prev)
       const openThreshold = SWIPE_ACTION_WIDTH * 0.3
-      const deleteThreshold = SWIPE_ACTION_WIDTH * 0.9
+      const deleteThreshold = SWIPE_ACTION_WIDTH * 0.95
 
       if (opened >= deleteThreshold && swipedId) {
         handleDelete(swipedId)
