@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from 'react'
 import type { Word } from '../types/word'
 import { createEmptyWord } from '../types/word'
-import { loadWords, saveWords } from '../lib/storage'
+import { runMigrationAndLoadWords } from '../storage/migration'
+import { replaceAllWordsInDb } from '../storage/wordDb'
 
 interface UseWordsResult {
   words: Word[]
@@ -12,11 +13,30 @@ interface UseWordsResult {
 }
 
 export function useWords(): UseWordsResult {
-  const [words, setWords] = useState<Word[]>(() => loadWords())
+  const [words, setWords] = useState<Word[]>([])
+  const [initialized, setInitialized] = useState(false)
 
   useEffect(() => {
-    saveWords(words)
-  }, [words])
+    let cancelled = false
+
+    ;(async () => {
+      const loaded = await runMigrationAndLoadWords()
+      if (cancelled) return
+      setWords(loaded)
+      setInitialized(true)
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!initialized) return
+    replaceAllWordsInDb(words).catch(() => {
+      // ignore persistence errors; UI state remains in memory
+    })
+  }, [words, initialized])
 
   const addWord = useCallback(() => {
     const newWord = createEmptyWord()
