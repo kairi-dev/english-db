@@ -23,6 +23,7 @@ interface WordListItemProps {
   onSwipeEnd: () => void
   onSwipeClose: () => void
   onToggleSelect: () => void
+  onRequestSelectionMode: () => void
 }
 
 export function WordListItem({
@@ -44,6 +45,7 @@ export function WordListItem({
   onSwipeEnd,
   onSwipeClose,
   onToggleSelect,
+  onRequestSelectionMode,
 }: WordListItemProps) {
   const [editTitle, setEditTitle] = useState(word.title)
   const [editContent, setEditContent] = useState(word.content)
@@ -74,6 +76,11 @@ export function WordListItem({
     if (isSelectionMode) return
     const x = e.touches[0].clientX
     const delta = x - lastX.current
+    // 右スワイプで全体の選択モードを開始
+    if (delta > 8 && !isSelectionMode) {
+      onRequestSelectionMode()
+      return
+    }
     lastX.current = x
     onSwipeMove(delta)
   }

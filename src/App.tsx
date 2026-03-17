@@ -3,6 +3,8 @@ import type { Word } from './types/word'
 import { useWords } from './hooks/useWords'
 import { NewWordRow } from './components/NewWordRow'
 import { WordListItem } from './components/WordListItem.tsx'
+import { DeleteIcon } from './components/icons/DeleteIcon'
+import { CloseIcon } from './components/icons/CloseIcon'
 import './App.css'
 
 const APP_TITLE = 'My English DB'
@@ -180,32 +182,26 @@ function App() {
           <SearchIcon />
         </button>
         <h1 className="header-title">{APP_TITLE}</h1>
-        {isSelectionMode ? (
-          <>
+        {isSelectionMode && (
+          <div style={{ display: 'flex', gap: 4 }}>
             <button
               type="button"
-              className="header-btn text"
+              className="header-btn icon"
               onClick={handleBulkDelete}
               disabled={selectedIds.length === 0}
+              aria-label="Delete selected"
             >
-              削除
+              <DeleteIcon />
             </button>
             <button
               type="button"
-              className="header-btn text"
+              className="header-btn icon"
               onClick={handleExitSelectionMode}
+              aria-label="Exit selection mode"
             >
-              キャンセル
+              <CloseIcon />
             </button>
-          </>
-        ) : (
-          <button
-            type="button"
-            className="header-btn text"
-            onClick={handleEnterSelectionMode}
-          >
-            選択
-          </button>
+          </div>
         )}
       </header>
 
@@ -257,6 +253,7 @@ function App() {
               onSwipeEnd={handleSwipeEnd}
               onSwipeClose={handleSwipeClose}
               onToggleSelect={() => handleToggleSelect(entry.id)}
+              onRequestSelectionMode={handleEnterSelectionMode}
             />
           ))}
       </main>

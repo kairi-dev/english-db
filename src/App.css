@@ -79,22 +79,7 @@
   height: var(--touch-min);
 }
 
-.header-btn.text {
-  min-width: 56px;
-  height: var(--touch-min);
-  margin: 0 4px;
-  padding: 0 8px;
-  border: none;
-  background: transparent;
-  color: var(--header-fg);
-  font-size: 0.875rem;
-  cursor: pointer;
-}
-
-.header-btn.text:disabled {
-  opacity: 0.4;
-  cursor: default;
-}
+/* text header buttons were used before; now header uses icon buttons only */
 
 /* Search */
 .search-bar {
