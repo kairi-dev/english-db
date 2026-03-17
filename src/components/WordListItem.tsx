@@ -45,17 +45,19 @@ export function WordListItem({
   const touchStartX = useRef(0)
   const lastX = useRef(0)
   const opened = swipeOffset < 0
-  const segment = swipeActionWidth / 3
   const revealed = -swipeOffset
-  const maxReveal = swipeActionWidth
+  const ACTION_BTN_W = 56
+  const ACTION_GAP = 4
+  const fixedNonDeleteW = ACTION_BTN_W * 2 + ACTION_GAP * 2
+  const maxStripW = swipeActionWidth + fixedNonDeleteW + 24
+  const stripW = Math.min(maxStripW, Math.max(swipeActionWidth, revealed))
+  const deleteWidth = Math.max(ACTION_BTN_W, stripW - fixedNonDeleteW)
+
+  // opacity: 0→1 as each action becomes fully available
+  const segment = swipeActionWidth / 3
   const opacityEdit = Math.min(1, Math.max(0, revealed / segment))
   const opacityTop = Math.min(1, Math.max(0, (revealed - segment) / segment))
   const opacityDelete = Math.min(1, Math.max(0, (revealed - 2 * segment) / segment))
-
-  const baseDeleteWidth = swipeActionWidth / 3
-  const maxDeleteWidth = swipeActionWidth
-  const revealRatio = Math.min(1, Math.max(0, revealed / maxReveal))
-  const deleteWidth = baseDeleteWidth + (maxDeleteWidth - baseDeleteWidth) * revealRatio
 
   useEffect(() => {
     setEditTitle(word.title)
@@ -129,13 +131,13 @@ export function WordListItem({
       {/* Notion式: 右端に固定のボタン帯。コンテンツが左スライドすると下から見える */}
       <div
         className={`swipe-actions-strip${opened ? ' swipe-actions-strip--visible' : ''}`}
-        style={{ width: swipeActionWidth }}
+        style={{ width: stripW }}
         aria-hidden={!opened}
       >
         <button
           type="button"
           className="word-action-btn edit"
-          style={{ opacity: opacityEdit }}
+          style={{ opacity: opacityEdit, width: ACTION_BTN_W, flex: `0 0 ${ACTION_BTN_W}px` }}
           onClick={(e) => {
             e.stopPropagation()
             onStartEdit()
@@ -146,7 +148,7 @@ export function WordListItem({
         <button
           type="button"
           className="word-action-btn top"
-          style={{ opacity: opacityTop }}
+          style={{ opacity: opacityTop, width: ACTION_BTN_W, flex: `0 0 ${ACTION_BTN_W}px` }}
           onClick={(e) => {
             e.stopPropagation()
             onMoveToTop()
@@ -157,7 +159,7 @@ export function WordListItem({
         <button
           type="button"
           className="word-action-btn delete"
-          style={{ opacity: opacityDelete, width: deleteWidth }}
+          style={{ opacity: opacityDelete, width: deleteWidth, flex: `0 0 ${deleteWidth}px` }}
           onClick={(e) => {
             e.stopPropagation()
             onDelete()

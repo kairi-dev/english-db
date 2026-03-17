@@ -7,6 +7,11 @@ import './App.css'
 
 const APP_TITLE = 'My English DB'
 const SWIPE_ACTION_WIDTH = 176
+const ACTION_BTN_W = 56
+const ACTION_GAP = 4
+const FIXED_NON_DELETE_W = ACTION_BTN_W * 2 + ACTION_GAP * 2
+const DEEP_DELETE_REVEAL = SWIPE_ACTION_WIDTH + FIXED_NON_DELETE_W
+const MAX_REVEAL = DEEP_DELETE_REVEAL + 24
 
 function App() {
   const { words, addWord, updateWord, deleteWord, moveWordToTop } = useWords()
@@ -111,7 +116,7 @@ function App() {
       // 左スワイプ(deltaX < 0)でコンテンツを左(負方向)に動かす
       const next = prev + deltaX
       if (next > 0) return 0
-      if (next < -SWIPE_ACTION_WIDTH) return -SWIPE_ACTION_WIDTH
+      if (next < -MAX_REVEAL) return -MAX_REVEAL
       return next
     })
   }, [])
@@ -120,7 +125,7 @@ function App() {
     setSwipeOffset((prev) => {
       const opened = Math.abs(prev)
       const openThreshold = SWIPE_ACTION_WIDTH * 0.3
-      const deleteThreshold = SWIPE_ACTION_WIDTH * 0.95
+      const deleteThreshold = DEEP_DELETE_REVEAL
 
       if (opened >= deleteThreshold && swipedId) {
         handleDelete(swipedId)
